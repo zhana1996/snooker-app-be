@@ -9,6 +9,12 @@ export class UserDetails {
 
     @Column({ nullable: false })
     age: number;
+
+    @Column({ nullable: false })
+    name: string;
+
+    @Column({ nullable: false })
+    gender: string;
   
     @Column({ nullable: false })
     break: number;
