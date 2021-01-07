@@ -4,12 +4,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, Prima
 
 import { Exclude } from 'class-transformer';
 import { UserDetails } from './user-details.entity';
-
-export enum UserRole {
-    ADMIN = 'ADMIN',
-    PLAYER = 'PLAYER',
-    TRAINER = 'TRAINER'
-}
+import { UserRole } from '../enum/user-role.enum';
 
 @Entity()
 export class User {
@@ -28,6 +23,10 @@ export class User {
 
     @Column({ nullable: false, default: UserRole.PLAYER })
     role: UserRole;
+
+    @OneToOne(() => UserDetails, userDetails => userDetails.user, { cascade: true, onDelete: 'CASCADE' })
+    @JoinColumn()
+    userDetails: UserDetails;
   
     @BeforeInsert()
     @BeforeUpdate() 
@@ -35,7 +34,4 @@ export class User {
         this.password = await bcrypt.hash(this.password, 10);  
     }
 
-    @OneToOne(() => UserDetails, userDetails => userDetails.user, { cascade: true })
-    @JoinColumn()
-    userDetails: UserDetails;
 }

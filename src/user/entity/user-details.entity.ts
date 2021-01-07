@@ -1,6 +1,7 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { User } from './user.entity';
+import { UserGenderEnum } from '../enum/user-gender.enum';
 
 @Entity()
 export class UserDetails {
@@ -13,8 +14,8 @@ export class UserDetails {
     @Column({ nullable: false })
     name: string;
 
-    @Column({ nullable: false })
-    gender: string;
+    @Column('enum', { enum: UserGenderEnum, nullable: false })
+    gender: UserGenderEnum;
   
     @Column({ nullable: false })
     break: number;
@@ -46,6 +47,6 @@ export class UserDetails {
     @Column({ nullable: true })
     points: number;
 
-    @OneToOne(() => User, user => user.userDetails)
+    @OneToOne(() => User, user => user.userDetails, { onDelete: 'CASCADE' })
     user: User;
 }
