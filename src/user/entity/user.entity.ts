@@ -24,6 +24,9 @@ export class User {
     @Column({ nullable: false, default: UserRole.PLAYER })
     role: UserRole;
 
+    @Column({ default: false })
+    isEnabled: boolean;
+
     @OneToOne(() => UserDetails, userDetails => userDetails.user, { cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     userDetails: UserDetails;

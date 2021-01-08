@@ -6,6 +6,7 @@ import { CreateUserDto } from '../../dto/create-user.dto';
 import { ChangePasswordDto } from '../../dto/change-password.dto';
 import { UserGenderEnum } from 'src/user/enum/user-gender.enum';
 import { UserDetails } from 'src/user/entity/user-details.entity';
+import { UserRole } from 'src/user/enum/user-role.enum';
 
 @Injectable()
 export class UserService {
@@ -80,6 +81,8 @@ export class UserService {
   async getAll(gender: UserGenderEnum): Promise<User[]> {
     let query = this.usersRepository.createQueryBuilder('users')
       .leftJoinAndSelect('users.userDetails', 'userDetails')
+      .where('users.role != :userRole', { userRole: 'ADMIN' })
+      .andWhere('users.isEnabled = :isEnabled', { isEnabled: true })
       .orderBy('userDetails.rank', 'ASC');
     
     if (gender) {
@@ -87,6 +90,16 @@ export class UserService {
     }
 
     return query.getMany();
+  }
+
+  async getAllDisabled(role: UserRole): Promise<User[]> {
+    return await this.usersRepository.find({ 
+      where: {
+        isEnabled: false,
+        role 
+      },
+      relations: ['userDetails']
+     })
   }
 
   async updateUserDetails(userDetails: UserDetails): Promise<UserDetails> {
@@ -104,6 +117,12 @@ export class UserService {
     await this.userDetailsRepository.remove(userDetails);
 
     return user;
+  }
+
+  async approve(userId: string): Promise<User> {
+    const user = await this.getById(userId);
+    user.isEnabled = true;
+    return await this.usersRepository.save(user);
   }
 
   private async getUserDetailsById(id: string): Promise<UserDetails> {

@@ -54,4 +54,18 @@ export class UserController {
     async updateUserDetails(@Body() userDetails: UserDetails): Promise<UserDetails> {
         return this.userService.updateUserDetails(userDetails);
     }
+
+    @Get('disabled')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async getAllDisabled(@Query('role') role: UserRole): Promise<User[]> {
+        return this.userService.getAllDisabled(role);
+    }
+
+    @Get('approve')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async approveUser(@Query('userId') userId: string): Promise<User> {
+        return this.userService.approve(userId);
+    }
 }

@@ -16,8 +16,13 @@ export class AuthService {
 
     async login(credentials: LoginUserDto) {
         const user = await this.userService.getByUsername(credentials.username);
+
         if (!user) {
             throw new NotFoundException('User not found!');
+        }
+
+        if (!user.isEnabled) {
+            throw new HttpException('Your account must be approved by administrator!', HttpStatus.BAD_REQUEST);
         }
 
         if(!(await bcrypt.compare(credentials.password, user.password))) {
