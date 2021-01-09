@@ -11,7 +11,7 @@ export class TournamentEntity {
     @Column({ nullable: false })
     place: string;
 
-    @Column('date', { nullable: false })
+    @Column({ type: 'timestamp', nullable: false })
     startDate: Date;
 
     @Column({ nullable: false })

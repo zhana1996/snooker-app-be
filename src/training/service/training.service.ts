@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from 'src/user/service/user/user.service';
+import { UserService } from 'src/user/service/user.service';
 import { Repository } from 'typeorm';
 import { TrainingEntity } from '../entity/training.entity';
 
@@ -16,5 +16,18 @@ export class TrainingService {
         delete user.password;
         training.user = user;
         return await this.trainingRepository.save(training);
+    }
+
+    async getByUserId(userId: string): Promise<TrainingEntity[]> {
+        return await this.trainingRepository.find({
+            where: {
+                user: { id: userId }
+            },
+            relations: ['participant', 'user', 'participant.player']
+        });
+    }
+
+    async getById(trainingId: string): Promise<TrainingEntity> {
+        return await this.trainingRepository.findOne({ id: trainingId });
     }
 }

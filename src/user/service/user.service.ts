@@ -1,9 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { User } from '../../entity/user.entity';
+import { User } from '../entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../../dto/create-user.dto';
-import { ChangePasswordDto } from '../../dto/change-password.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
 import { UserGenderEnum } from 'src/user/enum/user-gender.enum';
 import { UserDetails } from 'src/user/entity/user-details.entity';
 import { UserRole } from 'src/user/enum/user-role.enum';
@@ -100,6 +100,15 @@ export class UserService {
       },
       relations: ['userDetails']
      })
+  }
+
+  async getEnalbedTrainers(): Promise<User[]> {
+    return await this.usersRepository.find({
+      where: {
+        isEnabled: true,
+        role: UserRole.TRAINER
+      }
+    });
   }
 
   async updateUserDetails(userDetails: UserDetails): Promise<UserDetails> {

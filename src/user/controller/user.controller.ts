@@ -1,9 +1,9 @@
-import { Controller, Post, Body, ValidationPipe, UseFilters, Put, Get, UseGuards, Query, ClassSerializerInterceptor, UseInterceptors, Patch, Delete } from '@nestjs/common';
-import { UserService } from '../../service/user/user.service';
-import { User } from '../../entity/user.entity';
-import { CreateUserDto } from '../../dto/create-user.dto';
+import { Controller, Post, Body, ValidationPipe, Put, Get, UseGuards, Query, ClassSerializerInterceptor, UseInterceptors, Delete } from '@nestjs/common';
+import { UserService } from '../service/user.service';
+import { User } from '../entity/user.entity';
+import { CreateUserDto } from '../dto/create-user.dto';
 //import { QueryFailedErrorFilter } from '../../../exception-filters/query-error.filter';
-import { ChangePasswordDto } from '../../dto/change-password.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/role.decorator';
@@ -60,6 +60,13 @@ export class UserController {
     @Roles(UserRole.ADMIN)
     async getAllDisabled(@Query('role') role: UserRole): Promise<User[]> {
         return this.userService.getAllDisabled(role);
+    }
+
+    @Get('trainers')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.PLAYER)
+    async getEnabledTrainers(): Promise<User[]> {
+        return this.userService.getEnalbedTrainers();
     }
 
     @Get('approve')

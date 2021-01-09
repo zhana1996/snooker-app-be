@@ -3,7 +3,7 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 import { UserGenderEnum } from '../enum/user-gender.enum';
 
-@Entity()
+@Entity('USER_DETAILS')
 export class UserDetails {
     @PrimaryGeneratedColumn('uuid')
     id: string;

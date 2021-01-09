@@ -7,6 +7,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TournamentModule } from './tournament/tournament.module';
 import { TrainingModule } from './training/training.module';
+import { TrainingParticipantModule } from './training-participant/training-participant.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TrainingModule } from './training/training.module';
     }),
     TournamentModule,
     TrainingModule,
+    TrainingParticipantModule,
   ],
   controllers: [AppController],
   providers: [AppService],

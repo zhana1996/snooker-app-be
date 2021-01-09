@@ -35,4 +35,10 @@ export class TournamentController {
     async delete(@Query('tournamentId') tournamentId: string): Promise<TournamentEntity> {
         return this.tournamentService.delete(tournamentId);
     }
+
+    @Get('earliest')
+    @Roles(UserRole.PLAYER, UserRole.TRAINER)
+    async getEarilest(): Promise<TournamentEntity> {
+        return this.tournamentService.getEarliest();
+    }
 }

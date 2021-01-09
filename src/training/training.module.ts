@@ -8,6 +8,7 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [TypeOrmModule.forFeature([TrainingEntity]), UserModule],
   controllers: [TrainingController],
-  providers: [TrainingService]
+  providers: [TrainingService],
+  exports: [TrainingService]
 })
 export class TrainingModule {}

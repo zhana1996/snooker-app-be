@@ -6,7 +6,7 @@ import { ConfigService } from '../../config/config.service';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '../dto/login-user.dto';
-import { UserService } from '../../user/service/user/user.service';
+import { UserService } from '../../user/service/user.service';
 
 @Injectable()
 export class AuthService {
