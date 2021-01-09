@@ -16,7 +16,12 @@ export class TournamentService {
     async filterTournaments(month: number, year: number, season: string): Promise<TournamentEntity[]> {
         if (season) {
             return await this.tournamentRepository.find({
-                season
+                where: {
+                    season
+                },
+                order: {
+                    startDate: 'DESC'
+                }
             });
         }
         const date = new Date();
@@ -27,7 +32,12 @@ export class TournamentService {
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 1);
 
         return await this.tournamentRepository.find({
-            startDate: BetweenDate(firstDay, lastDay)
+            where: {
+                startDate: BetweenDate(firstDay, lastDay)
+            },
+            order: {
+                startDate: 'DESC'
+            }
         });
     }
 
