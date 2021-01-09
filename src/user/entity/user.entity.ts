@@ -1,8 +1,9 @@
 import * as bcrypt from 'bcrypt';
 
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
+import { TrainingEntity } from 'src/training/entity/training.entity';
 import { UserDetails } from './user-details.entity';
 import { UserRole } from '../enum/user-role.enum';
 
@@ -30,6 +31,9 @@ export class User {
     @OneToOne(() => UserDetails, userDetails => userDetails.user, { cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     userDetails: UserDetails;
+
+    @OneToMany(() => TrainingEntity, training => training.user)
+    trainings: TrainingEntity[];
   
     @BeforeInsert()
     async hashPassword() {

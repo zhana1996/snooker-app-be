@@ -6,6 +6,7 @@ import { DatabaseConfigService } from './config/database-config/database-config.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TournamentModule } from './tournament/tournament.module';
+import { TrainingModule } from './training/training.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TournamentModule } from './tournament/tournament.module';
       useClass: DatabaseConfigService,
     }),
     TournamentModule,
+    TrainingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

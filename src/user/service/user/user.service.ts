@@ -86,7 +86,7 @@ export class UserService {
       .orderBy('userDetails.rank', 'ASC');
     
     if (gender) {
-      query = query.andWhere('userDetails.gender = :gender', { gender });
+      query = query.where('userDetails.gender = :gender', { gender });
     }
 
     return query.getMany();
