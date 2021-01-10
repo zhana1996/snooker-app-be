@@ -1,6 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Request } from 'express';
+import { User } from 'src/user/entity/user.entity';
+import { Between, Brackets, Repository } from 'typeorm';
 import { TournamentEntity } from '../entity/tournament.entity';
 
 @Injectable()
@@ -8,6 +11,7 @@ export class TournamentService {
   constructor(
     @InjectRepository(TournamentEntity)
     private tournamentRepository: Repository<TournamentEntity>,
+    @Inject(REQUEST) private readonly request: Request
   ) {}
 
   async create(tournament: TournamentEntity): Promise<TournamentEntity> {
@@ -58,9 +62,16 @@ export class TournamentService {
   }
 
   async getEarliest(): Promise<any> {
+    const user = this.request.user as User;
+
     const tournament = await this.tournamentRepository
       .createQueryBuilder('tournament')
+      .leftJoinAndSelect('tournament.tournamentParticipants', 'tournamentParticipant')
       .where('tournament.startDate > :today', { today: new Date() })
+      .andWhere(new Brackets(qb => {
+        qb.where('tournamentParticipant.user.id = :userId', { userId: user.id })
+          .orWhere('tournamentParticipant.id IS NULL')
+      }))
       .orderBy('tournament.startDate')
       .limit(1)
       .getOne();
@@ -69,7 +80,7 @@ export class TournamentService {
       new Date().toISOString(),
       tournament.startDate.toISOString(),
     );
-
+    
     return {
       tournament,
       days,
