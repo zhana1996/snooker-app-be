@@ -23,7 +23,7 @@ export class TrainingService {
             where: {
                 user: { id: userId }
             },
-            relations: ['participant', 'user', 'participant.player']
+            relations: ['participant', 'user', 'user.userDetails', 'participant.player']
         });
     }
 

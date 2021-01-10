@@ -21,7 +21,7 @@ export class TrainingController {
     }
 
     @Get()
-    @Roles(UserRole.TRAINER)
+    @Roles(UserRole.TRAINER, UserRole.PLAYER)
     async getByUserId(@Query('userId') userId: string): Promise<TrainingEntity[]> {
         return this.trainingService.getByUserId(userId);
     }

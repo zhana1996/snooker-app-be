@@ -64,15 +64,15 @@ export class TournamentService {
       .orderBy('tournament.startDate')
       .limit(1)
       .getOne();
-
-    const [days, months, minutes] = this.parseDates(
+      
+    const [days, hours, minutes] = this.parseDates(
       new Date().toISOString(),
       tournament.startDate.toISOString(),
     );
     return {
       tournament,
       days,
-      months,
+      hours,
       minutes,
     };
   }

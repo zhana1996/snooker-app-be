@@ -107,7 +107,8 @@ export class UserService {
       where: {
         isEnabled: true,
         role: UserRole.TRAINER
-      }
+      },
+      relations: ['userDetails']
     });
   }
 
