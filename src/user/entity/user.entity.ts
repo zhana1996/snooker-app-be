@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { BeforeInsert, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Exclude } from 'class-transformer';
+import { TorunamentParticipantEntity } from 'src/tournament-participant/entity/tournament-participant.entity';
 import { TrainingEntity } from 'src/training/entity/training.entity';
 import { TrainingParticipantEntity } from 'src/training-participant/entity/training-participant.entity';
 import { UserDetails } from './user-details.entity';
@@ -38,6 +39,9 @@ export class User {
 
     @OneToMany(() => TrainingParticipantEntity, training => training.player)
     participants: TrainingParticipantEntity[];
+
+    @OneToMany(() => TorunamentParticipantEntity, participants => participants.user)
+    tournamentParticipants: TorunamentParticipantEntity[];
   
     @BeforeInsert()
     async hashPassword() {

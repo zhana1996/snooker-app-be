@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { TorunamentParticipantEntity } from 'src/tournament-participant/entity/tournament-participant.entity';
 
 @Entity('TOURNAMENT')
 export class TournamentEntity {
@@ -16,4 +18,7 @@ export class TournamentEntity {
 
     @Column({ nullable: false })
     season: string;
+
+    @OneToMany(() => TorunamentParticipantEntity, participants => participants.tournament)
+    tournamentParticipants: TorunamentParticipantEntity[];
 }

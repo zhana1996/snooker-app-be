@@ -69,6 +69,7 @@ export class TournamentService {
       new Date().toISOString(),
       tournament.startDate.toISOString(),
     );
+
     return {
       tournament,
       days,

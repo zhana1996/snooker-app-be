@@ -1,5 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
+import { User } from 'src/user/entity/user.entity';
+import { UserRole } from 'src/user/enum/user-role.enum';
 import { UserService } from 'src/user/service/user.service';
 import { Repository } from 'typeorm';
 import { TrainingEntity } from '../entity/training.entity';
@@ -9,7 +13,8 @@ export class TrainingService {
     constructor(
         @InjectRepository(TrainingEntity) 
         private trainingRepository: Repository<TrainingEntity>,
-        private userService: UserService) {}
+        private userService: UserService,
+        @Inject(REQUEST) private readonly request: Request) {}
 
     async create(training: TrainingEntity, userId: string): Promise<TrainingEntity> {
         const user = await this.userService.getById(userId);
@@ -19,12 +24,18 @@ export class TrainingService {
     }
 
     async getByUserId(userId: string): Promise<TrainingEntity[]> {
-        return await this.trainingRepository.find({
+        const user: User = this.request.user as User;
+
+        let trainings = await this.trainingRepository.find({
+            relations: ['participant', 'user', 'user.userDetails', 'participant.player'],
             where: {
                 user: { id: userId }
-            },
-            relations: ['participant', 'user', 'user.userDetails', 'participant.player']
+            }
         });
+        if (user.role === UserRole.PLAYER) {
+            trainings = trainings.filter(training => !training.participant)
+        }
+        return trainings;
     }
 
     async getById(trainingId: string): Promise<TrainingEntity> {
