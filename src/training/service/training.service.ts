@@ -29,7 +29,10 @@ export class TrainingService {
         let trainings = await this.trainingRepository.find({
             relations: ['participant', 'user', 'user.userDetails', 'participant.player'],
             where: {
-                user: { id: userId }
+                user: { id: userId },
+            },
+            order: {
+                startDate: 'ASC'
             }
         });
         if (user.role === UserRole.PLAYER) {
