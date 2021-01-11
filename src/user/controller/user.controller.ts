@@ -34,6 +34,13 @@ export class UserController {
         return await this.userService.getAll(gender);
     }
 
+    @Get('all-by-titles')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.PLAYER, UserRole.TRAINER)
+    async getAllByTitles(): Promise<User[]> {
+        return await this.userService.getAllPlayersByTitles();
+    }
+
     @Get()
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Roles(UserRole.PLAYER, UserRole.ADMIN, UserRole.TRAINER)

@@ -92,6 +92,17 @@ export class UserService {
     return query.getMany();
   }
 
+  async getAllPlayersByTitles(): Promise<User[]> {
+    let query = this.usersRepository.createQueryBuilder('users')
+      .leftJoinAndSelect('users.userDetails', 'userDetails')
+      .where('users.role != :userRole', { userRole: 'ADMIN' })
+      .andWhere('users.isEnabled = :isEnabled', { isEnabled: true })
+      .andWhere('userDetails.titles > :title', { title: 0 })
+      .orderBy('userDetails.titles', 'DESC');
+
+    return query.getMany();
+  }
+
   async getAllDisabled(role: UserRole): Promise<User[]> {
     return await this.usersRepository.find({ 
       where: {
