@@ -9,6 +9,7 @@ import { TournamentParticipantModule } from './tournament-participant/tournament
 import { TrainingModule } from './training/training.module';
 import { TrainingParticipantModule } from './training-participant/training-participant.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TournamentModule,
     TrainingModule,
     TrainingParticipantModule,
-    TournamentParticipantModule
+    TournamentParticipantModule,
+    NewsModule
   ],
   controllers: [AppController],
   providers: [AppService],
