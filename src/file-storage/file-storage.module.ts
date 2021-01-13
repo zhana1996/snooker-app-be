@@ -11,7 +11,7 @@ import { diskStorage } from 'multer';
     MulterModule.registerAsync({
       useFactory: () => ({
         storage: diskStorage({
-          destination: '/Users/Zhana Mitova/snooker-app-be/uploads',
+          destination: './uploads',
           filename: editFileName
         }),
         fileFilter: fileFilter

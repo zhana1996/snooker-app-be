@@ -24,7 +24,7 @@ export class TournamentService {
     season: string,
   ): Promise<TournamentEntity[]> {
     if (season) {
-      return await this.tournamentRepository.find({
+      const tournaments = await this.tournamentRepository.find({
         where: {
           season,
         },
@@ -32,6 +32,11 @@ export class TournamentService {
           startDate: 'DESC',
         },
       });
+
+      const earliestTournament = tournaments.map(transport => Math.abs(new Date().getTime() - transport.startDate.getTime()));
+      const idx = earliestTournament.indexOf(Math.min(...earliestTournament));
+      tournaments[idx].isEarliest = true;
+      return tournaments;
     }
     const date = new Date();
     date.setMonth(month);

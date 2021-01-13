@@ -24,4 +24,6 @@ export class TournamentEntity {
 
     @OneToMany(() => TorunamentParticipantEntity, participants => participants.tournament)
     tournamentParticipants: TorunamentParticipantEntity[];
+
+    isEarliest: boolean;
 }
