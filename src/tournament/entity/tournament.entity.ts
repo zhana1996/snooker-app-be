@@ -19,6 +19,9 @@ export class TournamentEntity {
     @Column({ nullable: false })
     season: string;
 
+    @Column({ nullable: true })
+    fileName: string;
+
     @OneToMany(() => TorunamentParticipantEntity, participants => participants.tournament)
     tournamentParticipants: TorunamentParticipantEntity[];
 }

@@ -13,6 +13,6 @@ export class FileStorageController {
 
     @Get(':imgpath')
     seeUploadedFile(@Param('imgpath') image: string, @Res() res: Response) {
-      return res.sendFile(image, { root: '/Users/darkoandreev/Desktop/snooker-app-be/uploads' });
+      return res.sendFile(image, { root: 'C:/Users/Zhana Mitova/snooker-app-be/uploads' });
     }
 }
