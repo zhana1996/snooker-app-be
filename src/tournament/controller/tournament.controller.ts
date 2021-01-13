@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { User } from 'src/user/entity/user.entity';
 import { UserRole } from 'src/user/enum/user-role.enum';
 import { TournamentEntity } from '../entity/tournament.entity';
 import { TournamentService } from '../service/tournament.service';
@@ -24,6 +25,11 @@ export class TournamentController {
         return this.tournamentService.filterTournaments(month, year, season);
     }
 
+    @Get(':id')
+    async getById(@Param() id: string): Promise<TournamentEntity> {
+        return this.tournamentService.getById(id);
+    }
+
     @Put()
     @Roles(UserRole.ADMIN)
     async update(@Body() tournament: TournamentEntity): Promise<TournamentEntity> {
@@ -40,5 +46,13 @@ export class TournamentController {
     @Roles(UserRole.PLAYER, UserRole.TRAINER)
     async getEarilest(): Promise<TournamentEntity> {
         return this.tournamentService.getEarliest();
+    }
+
+
+    @Get('shuffle/:id')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async shuffleAndGetPairs(@Param() id: string): Promise<{ players: User[][]; numberOnePlayer: User }> {
+        return this.tournamentService.shuffleAndGetPairs(id);
     }
 }

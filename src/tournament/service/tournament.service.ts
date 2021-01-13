@@ -34,8 +34,10 @@ export class TournamentService {
       });
 
       const earliestTournament = tournaments.map(transport => Math.abs(new Date().getTime() - transport.startDate.getTime()));
-      const idx = earliestTournament.indexOf(Math.min(...earliestTournament));
-      tournaments[idx].isEarliest = true;
+      if (earliestTournament) {
+        const idx = earliestTournament.indexOf(Math.min(...earliestTournament));
+        tournaments[idx].isEarliest = true;
+      }
       return tournaments;
     }
     const date = new Date();
@@ -94,6 +96,19 @@ export class TournamentService {
     };
   }
 
+  async getById(id: string): Promise<TournamentEntity> {
+    return await this.tournamentRepository.findOne(id, { relations: ['tournamentParticipants', 'tournamentParticipants.user'] });
+  }
+
+  async shuffleAndGetPairs(id: string): Promise<{ players: User[][]; numberOnePlayer: User }> {
+    const users = (await this.getById(id))?.tournamentParticipants.map(participant => {
+      delete participant.user.password;
+      return participant.user
+    });
+
+    return this.shufflePlayers(users);
+  }
+
   private async checkIfTournamentsExists(
     id: string,
   ): Promise<TournamentEntity> {
@@ -149,6 +164,32 @@ export class TournamentService {
   // I calculate the delta breakdown using Second as the largest unit.
   private calculateSeconds(delta: number): number[] {
     return [delta];
+  }
+
+  private shufflePlayers(users: User[]): { players: User[][]; numberOnePlayer: User } {
+    let numberOnePlayer: User;
+
+    if (users.length % 2 !== 0) {
+      numberOnePlayer = users.shift();
+    }
+    
+    const usersArr = users.slice();
+
+    usersArr.sort(() => 0.5 - Math.random());
+
+    const players = usersArr.reduce((acc, item, index) => { 
+      const i = Math.floor(index / 2);
+
+      if(!acc[i]) {
+        acc[i] = [];
+      }
+
+      acc[i].push(item);
+
+      return acc;
+    }, []);
+
+    return { players, numberOnePlayer };
   }
 }
 
