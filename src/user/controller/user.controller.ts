@@ -82,4 +82,11 @@ export class UserController {
     async approveUser(@Query('userId') userId: string): Promise<User> {
         return this.userService.approve(userId);
     }
+
+    @Get('shuffle')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.ADMIN)
+    async shuffleAndGetPairs(): Promise<{ players: User[][]; numberOnePlayer: User }> {
+        return this.userService.shuffleAndGetPairs();
+    }
 }

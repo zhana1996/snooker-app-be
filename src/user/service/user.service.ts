@@ -78,7 +78,7 @@ export class UserService {
     return user;
   }
 
-  async getAll(gender: UserGenderEnum): Promise<User[]> {
+  async getAll(gender?: UserGenderEnum): Promise<User[]> {
     let query = this.usersRepository.createQueryBuilder('users')
       .leftJoinAndSelect('users.userDetails', 'userDetails')
       .where('users.role != :userRole', { userRole: 'ADMIN' })
@@ -93,7 +93,7 @@ export class UserService {
   }
 
   async getAllPlayersByTitles(): Promise<User[]> {
-    let query = this.usersRepository.createQueryBuilder('users')
+    const query = this.usersRepository.createQueryBuilder('users')
       .leftJoinAndSelect('users.userDetails', 'userDetails')
       .where('users.role != :userRole', { userRole: 'ADMIN' })
       .andWhere('users.isEnabled = :isEnabled', { isEnabled: true })
@@ -146,6 +146,11 @@ export class UserService {
     return await this.usersRepository.save(user);
   }
 
+  async shuffleAndGetPairs(): Promise<{ players: User[][]; numberOnePlayer: User }> {
+    const users = await this.getAll();
+    return this.shufflePlayers(users);
+  }
+
   private async getUserDetailsById(id: string): Promise<UserDetails> {
     const userDetails = this.userDetailsRepository.findOne({ id });
     if (!userDetails) {
@@ -155,5 +160,31 @@ export class UserService {
       );
     }
     return userDetails;
+  }
+
+  private shufflePlayers(users: User[]): { players: User[][]; numberOnePlayer: User } {
+    let numberOnePlayer: User;
+
+    if (users.length % 2 !== 0) {
+      numberOnePlayer = users.shift();
+    }
+    
+    const usersArr = users.slice();
+
+    usersArr.sort(() => 0.5 - Math.random());
+
+    const players = usersArr.reduce((acc, item, index) => { 
+      const i = Math.floor(index / 2);
+
+      if(!acc[i]) {
+        acc[i] = [];
+      }
+
+      acc[i].push(item);
+
+      return acc;
+    }, []);
+
+    return { players, numberOnePlayer };
   }
 }
