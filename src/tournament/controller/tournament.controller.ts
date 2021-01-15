@@ -25,6 +25,12 @@ export class TournamentController {
         return this.tournamentService.filterTournaments(month, year, season);
     }
 
+    @Get('earliest')
+    @Roles(UserRole.PLAYER, UserRole.TRAINER)
+    async getEarilest(): Promise<TournamentEntity> {
+        return this.tournamentService.getEarliest();
+    }
+
     @Get(':id')
     async getById(@Param() id: string): Promise<TournamentEntity> {
         return this.tournamentService.getById(id);
@@ -41,13 +47,6 @@ export class TournamentController {
     async delete(@Query('tournamentId') tournamentId: string): Promise<TournamentEntity> {
         return this.tournamentService.delete(tournamentId);
     }
-
-    @Get('earliest')
-    @Roles(UserRole.PLAYER, UserRole.TRAINER)
-    async getEarilest(): Promise<TournamentEntity> {
-        return this.tournamentService.getEarliest();
-    }
-
 
     @Get('shuffle/:id')
     @UseGuards(AuthGuard('jwt'), RolesGuard)
