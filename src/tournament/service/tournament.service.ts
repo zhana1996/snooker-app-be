@@ -36,7 +36,9 @@ export class TournamentService {
       const earliestTournament = tournaments.map(transport => Math.abs(new Date().getTime() - transport.startDate.getTime()));
       if (earliestTournament) {
         const idx = earliestTournament.indexOf(Math.min(...earliestTournament));
-        tournaments[idx].isEarliest = true;
+        if (idx !== -1) {
+          tournaments[idx].isEarliest = true;
+        }
       }
       return tournaments;
     }
