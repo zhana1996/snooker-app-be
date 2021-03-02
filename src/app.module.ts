@@ -11,6 +11,8 @@ import { TournamentParticipantModule } from './tournament-participant/tournament
 import { TrainingModule } from './training/training.module';
 import { TrainingParticipantModule } from './training-participant/training-participant.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -24,7 +26,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TrainingParticipantModule,
     TournamentParticipantModule,
     NewsModule,
-    FileStorageModule
+    FileStorageModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads'
+    })
   ],
   controllers: [AppController],
   providers: [AppService],

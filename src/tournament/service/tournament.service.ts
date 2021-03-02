@@ -3,7 +3,7 @@ import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { User } from 'src/user/entity/user.entity';
-import { Between, Brackets, Repository } from 'typeorm';
+import { Between, Brackets, MoreThan, Repository } from 'typeorm';
 import { TournamentEntity } from '../entity/tournament.entity';
 
 @Injectable()
@@ -73,18 +73,18 @@ export class TournamentService {
   async getEarliest(): Promise<any> {
     const user = this.request.user as User;
 
-    const tournament = await this.tournamentRepository
-      .createQueryBuilder('tournament')
-      .leftJoinAndSelect('tournament.tournamentParticipants', 'tournamentParticipant')
-      .where('tournament.startDate > :today', { today: new Date() })
-      .andWhere(new Brackets(qb => {
-        qb.where('tournamentParticipant.user.id = :userId', { userId: user.id })
-          .orWhere('tournamentParticipant.id IS NULL')
-      }))
-      .orderBy('tournament.startDate')
-      .limit(1)
-      .getOne();
-      
+    const tournament = await this.tournamentRepository.findOne({
+      where: {
+        startDate: MoreThan(new Date()),
+      },
+      relations: ['tournamentParticipants', 'tournamentParticipants.user'],
+      order: {
+        startDate: 'ASC'
+      }
+    })
+    
+    const isParticipating = tournament.tournamentParticipants.some(participate => participate.user.id === user.id);
+
     const [days, hours, minutes] = this.parseDates(
       new Date().toISOString(),
       tournament.startDate.toISOString(),
@@ -95,11 +95,12 @@ export class TournamentService {
       days,
       hours,
       minutes,
+      isParticipating
     };
   }
 
   async getById(id: string): Promise<TournamentEntity> {
-    return await this.tournamentRepository.findOne(id, { relations: ['tournamentParticipants', 'tournamentParticipants.user'] });
+    return await this.tournamentRepository.findOne(id, { relations: ['tournamentParticipants', 'tournamentParticipants.user', 'tournamentParticipants.user.userDetails'] });
   }
 
   async shuffleAndGetPairs(id: string): Promise<{ players: User[][]; numberOnePlayer: User }> {

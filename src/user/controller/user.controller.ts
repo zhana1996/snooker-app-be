@@ -1,4 +1,4 @@
-import { Controller, Post, Body, ValidationPipe, Put, Get, UseGuards, Query, ClassSerializerInterceptor, UseInterceptors, Delete } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Put, Get, UseGuards, Query, ClassSerializerInterceptor, UseInterceptors, Delete, UploadedFile } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { User } from '../entity/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -10,6 +10,7 @@ import { Roles } from 'src/auth/decorators/role.decorator';
 import { UserRole } from 'src/user/enum/user-role.enum';
 import { UserGenderEnum } from 'src/user/enum/user-gender.enum';
 import { UserDetails } from 'src/user/entity/user-details.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)

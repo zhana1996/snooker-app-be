@@ -1,6 +1,7 @@
 import { extname } from 'path';
 
 export const fileFilter = (req, file, callback) => {
+  console.log(file);
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif|pdf)$/)) {
       return callback(new Error('Only image and pdf files are allowed!'), false);
     }

@@ -8,7 +8,7 @@ export class TorunamentParticipantEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => TournamentEntity, tournament => tournament.tournamentParticipants)
+    @ManyToOne(() => TournamentEntity, tournament => tournament.tournamentParticipants, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     tournament: TournamentEntity;
 
     @ManyToOne(() => User, user => user.tournamentParticipants)
