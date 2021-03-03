@@ -30,6 +30,9 @@ export class User {
     @Column({ default: false })
     isEnabled: boolean;
 
+    @Column({ nullable: true })
+    notificationToken: string;
+
     @OneToOne(() => UserDetails, userDetails => userDetails.user, { cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     userDetails: UserDetails;

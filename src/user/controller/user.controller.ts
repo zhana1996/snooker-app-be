@@ -11,6 +11,7 @@ import { UserRole } from 'src/user/enum/user-role.enum';
 import { UserGenderEnum } from 'src/user/enum/user-gender.enum';
 import { UserDetails } from 'src/user/entity/user-details.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateResult } from 'typeorm';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -82,5 +83,12 @@ export class UserController {
     @Roles(UserRole.ADMIN)
     async approveUser(@Query('userId') userId: string): Promise<User> {
         return this.userService.approve(userId);
+    }
+
+    @Put('notification-token')
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.PLAYER, UserRole.TRAINER)
+    async updateUserNotificationToken(@Body() notificationTokenRequest): Promise<UpdateResult> {
+        return await this.userService.updateNotificationToken(notificationTokenRequest.userId, notificationTokenRequest.notificationToken);
     }
 }

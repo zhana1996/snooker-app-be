@@ -27,7 +27,7 @@ export class TrainingService {
         const user: User = this.request.user as User;
 
         let trainings = await this.trainingRepository.find({
-            relations: ['participant', 'user', 'user.userDetails', 'participant.player'],
+            relations: ['participant', 'user', 'user.userDetails', 'participant.player', 'participant.player.userDetails'],
             where: {
                 user: { id: userId },
             },
@@ -42,6 +42,6 @@ export class TrainingService {
     }
 
     async getById(trainingId: string): Promise<TrainingEntity> {
-        return await this.trainingRepository.findOne({ id: trainingId });
+        return await this.trainingRepository.findOne({ id: trainingId }, { relations: ['user', 'user.userDetails'] });
     }
 }

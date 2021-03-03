@@ -4,6 +4,7 @@ import { TrainingService } from 'src/training/service/training.service';
 import { UserService } from 'src/user/service/user.service';
 import { Repository } from 'typeorm';
 import { TrainingParticipantEntity } from '../entity/training-participant.entity';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class TrainingParticipantService {
@@ -19,6 +20,16 @@ export class TrainingParticipantService {
 
         participant.training = training;
         participant.player = player;
+
+        await admin.messaging().sendToDevice(training.user.notificationToken, 
+            { 
+                data: { 
+                    type: 'PLAYER_APPLY', 
+                    playerName: player.userDetails.name,
+                    trainingStartDate: training.startDate.toString(),
+                    club: training.user.userDetails.club  
+                } 
+            });
 
         return await this.trainingParticipantRepository.save(participant);
     }

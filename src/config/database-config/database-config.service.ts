@@ -16,7 +16,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
         database: this.config.get('DB_NAME'),
         autoLoadEntities: true,
         synchronize: false,
-        timezone: 'local',
+        timezone: 'UTC'
       };
     }
   }

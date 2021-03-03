@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from '../entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 import { UserGenderEnum } from 'src/user/enum/user-gender.enum';
@@ -144,6 +144,10 @@ export class UserService {
     const user = await this.getById(userId);
     user.isEnabled = true;
     return await this.usersRepository.save(user);
+  }
+
+  updateNotificationToken(userId: string, notificationToken: string): Promise<UpdateResult> {
+    return this.usersRepository.update({ id: userId }, { notificationToken });
   }
 
   private async getUserDetailsById(id: string): Promise<UserDetails> {

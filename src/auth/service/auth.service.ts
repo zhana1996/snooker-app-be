@@ -22,7 +22,7 @@ export class AuthService {
         }
 
         if (!user.isEnabled) {
-            throw new HttpException('Your account must be approved by administrator!', HttpStatus.BAD_REQUEST);
+            throw new HttpException('Твоят профил все още не е одобрен от администратора!', HttpStatus.BAD_REQUEST);
         }
 
         if(!(await bcrypt.compare(credentials.password, user.password))) {

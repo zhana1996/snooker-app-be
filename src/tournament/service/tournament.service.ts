@@ -83,7 +83,7 @@ export class TournamentService {
       }
     })
     
-    const isParticipating = tournament.tournamentParticipants.some(participate => participate.user.id === user.id);
+    const isParticipating = tournament.tournamentParticipants.some(participate => participate.user?.id === user.id);
 
     const [days, hours, minutes] = this.parseDates(
       new Date().toISOString(),
